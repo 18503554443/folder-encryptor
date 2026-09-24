@@ -1,0 +1,18 @@
+# 编译产物与二进制
+*.exe
+*.dll
+*.pdb
+build/
+!build/.gitkeep
+
+# 个人/环境相关（不入库）
+backup/
+tools/恢复日志.txt
+*.log
+
+# 测试与临时数据
+tests/*.exe
+*tmp*
+`*
+# 截图
+*.png
