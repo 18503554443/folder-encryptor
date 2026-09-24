@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -374,6 +374,13 @@ namespace InstantLock
             btnLock.Text = "加密";
         }
 
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            // 打开即把光标放进密码框
+            if (edtPwd != null) { edtPwd.Inner.Focus(); edtPwd.Inner.SelectAll(); }
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             PaintChrome(e.Graphics, 48, true, 32);
@@ -656,6 +663,13 @@ namespace InstantLock
             Msg.Info(this, t);
         }
 
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            // 打开即把光标放进密码框
+            if (edtPwd != null) { edtPwd.Inner.Focus(); edtPwd.Inner.SelectAll(); }
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             PaintChrome(e.Graphics, 48, true, 32);
@@ -733,6 +747,7 @@ namespace InstantLock
         }
     }
 }
+
 
 
 

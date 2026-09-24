@@ -567,6 +567,27 @@ namespace InstantLock
                         try { File.SetAttributes(container, FileAttributes.Normal); } catch { }
                         DeleteTree(container);
                     }
+                    // 同时清掉加密时复制进来的“文件夹解密.exe”（只删和我们自己完全一致的那份）
+                    try
+                    {
+                        string unlocker = Path.Combine(folder, "文件夹解密.exe");
+                        if (File.Exists(unlocker))
+                        {
+                            File.SetAttributes(unlocker, FileAttributes.Normal);
+                            string self = SelfFile;
+                            bool same = false;
+                            if (!string.IsNullOrEmpty(self) && File.Exists(self))
+                            {
+                                using (System.Security.Cryptography.SHA256 sha = System.Security.Cryptography.SHA256.Create())
+                                using (FileStream fa = File.OpenRead(unlocker))
+                                using (FileStream fb = File.OpenRead(self))
+                                    same = BitConverter.ToString(sha.ComputeHash(fa)) == BitConverter.ToString(sha.ComputeHash(fb));
+                            }
+                            if (same) File.Delete(unlocker);
+                        }
+                    }
+                    catch { }
+
                     string di = Path.Combine(folder, "desktop.ini");
                     if (File.Exists(di))
                     {
@@ -688,6 +709,7 @@ namespace InstantLock
         }
     }
 }
+
 
 
 
