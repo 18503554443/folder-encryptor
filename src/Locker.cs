@@ -583,7 +583,23 @@ namespace InstantLock
                                 using (FileStream fb = File.OpenRead(self))
                                     same = BitConverter.ToString(sha.ComputeHash(fa)) == BitConverter.ToString(sha.ComputeHash(fb));
                             }
-                            if (same) File.Delete(unlocker);
+                            if (same)
+                            {
+                                try { File.Delete(unlocker); }
+                                catch
+                                {
+                                    // 正在运行的程序无法自删：交给后台命令等本进程退出后再删
+                                    try
+                                    {
+                                        System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(
+                                            "cmd.exe", "/c ping -n 3 127.0.0.1 >nul & del /f /q \"" + unlocker + "\"");
+                                        psi.CreateNoWindow = true;
+                                        psi.UseShellExecute = false;
+                                        System.Diagnostics.Process.Start(psi);
+                                    }
+                                    catch { }
+                                }
+                            }
                         }
                     }
                     catch { }
@@ -709,6 +725,7 @@ namespace InstantLock
         }
     }
 }
+
 
 
 
